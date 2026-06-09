@@ -1,0 +1,20 @@
+{
+  "name": "mafia-garden",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc && vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "three": "^0.175.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.175.0",
+    "@vitejs/plugin-basic-ssl": "^2.0.0",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.4"
+  }
+}

@@ -1,0 +1,19 @@
+# Otros proyectos en el mismo disco (no MafiaGarden)
+/godot/
+/FarminBoy/
+
+# Godot
+**/.godot/
+*.import
+
+# Node / PWA (MafiaGarden)
+node_modules/
+dist/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.local
+.env
+.env.*
