@@ -1,11 +1,13 @@
 extends Node
+class_name CombatInputService
 
-## PUBG / Free Fire: izquierda = mover, derecha = arrastrar mira (yaw + pitch).
+## PUBG / Free Fire: izquierda = mover · derecha = mirar · botones = disparo/salto.
 
-const MOVE_REF_PX := 85.0
-const MOVE_DEADZONE := 0.06
-const LOOK_YAW_SENS := 0.005
-const LOOK_PITCH_SENS := 0.004
+const MOVE_REF_PX := 90.0
+const MOVE_KNOB_MAX_PX := 72.0
+const MOVE_DEADZONE := 0.10
+const LOOK_YAW_SENS := 0.0048
+const LOOK_PITCH_SENS := 0.0038
 const PITCH_MIN := -0.32
 const PITCH_MAX := 0.48
 
@@ -14,12 +16,17 @@ var _jump_requested := false
 
 var _move_touch_index := -1
 var _move_origin := Vector2.ZERO
+var _move_delta := Vector2.ZERO
 var _move_direction := Vector2.ZERO
 var _move_strength := 0.0
 
 var _look_touch_index := -1
 var camera_yaw := 0.0
 var camera_pitch := 0.14
+
+
+func _ready() -> void:
+	print("[CombatInput] autoload ready mobile=", OS.has_feature("mobile"))
 
 
 func register_fire_hold() -> void:
@@ -67,11 +74,12 @@ func get_aim_flat_direction() -> Vector3:
 	return Vector3(sin(camera_yaw), 0.0, cos(camera_yaw)).normalized()
 
 
-# --- Movimiento (mitad izquierda) ---
+# --- Movimiento (mitad izquierda, estilo joystick dinámico) ---
 
 func touch_move_begin(index: int, pos: Vector2) -> void:
 	_move_touch_index = index
 	_move_origin = pos
+	_move_delta = Vector2.ZERO
 	_update_move_delta(Vector2.ZERO)
 
 
@@ -85,12 +93,28 @@ func touch_move_end(index: int) -> void:
 	if _move_touch_index != index:
 		return
 	_move_touch_index = -1
+	_move_delta = Vector2.ZERO
 	_move_direction = Vector2.ZERO
 	_move_strength = 0.0
 
 
 func touch_move_active(index: int) -> bool:
 	return _move_touch_index == index
+
+
+func is_move_active() -> bool:
+	return _move_touch_index >= 0
+
+
+func get_move_origin() -> Vector2:
+	return _move_origin
+
+
+func get_move_knob_offset() -> Vector2:
+	var offset := _move_delta
+	if offset.length() > MOVE_KNOB_MAX_PX:
+		offset = offset.normalized() * MOVE_KNOB_MAX_PX
+	return offset
 
 
 func get_touch_move_direction() -> Vector2:
@@ -102,6 +126,7 @@ func get_touch_move_strength() -> float:
 
 
 func _update_move_delta(delta: Vector2) -> void:
+	_move_delta = delta
 	var magnitude := delta.length() / MOVE_REF_PX
 	if magnitude < MOVE_DEADZONE:
 		_move_direction = Vector2.ZERO
@@ -109,11 +134,11 @@ func _update_move_delta(delta: Vector2) -> void:
 		return
 	var scaled := clampf((magnitude - MOVE_DEADZONE) / (1.0 - MOVE_DEADZONE), 0.0, 1.0)
 	var dir := delta.normalized()
-	_move_direction = Vector2(dir.x, -dir.y) * scaled
+	_move_direction = Vector2(-dir.x, -dir.y) * scaled
 	_move_strength = scaled
 
 
-# --- Mira (mitad derecha, arrastre libre) ---
+# --- Mira (mitad derecha, arrastre relativo) ---
 
 func touch_look_begin(index: int) -> void:
 	_look_touch_index = index
@@ -122,6 +147,10 @@ func touch_look_begin(index: int) -> void:
 func touch_look_drag(index: int, relative: Vector2) -> void:
 	if _look_touch_index != index:
 		return
+	apply_look_delta(relative)
+
+
+func apply_look_delta(relative: Vector2) -> void:
 	camera_yaw -= relative.x * LOOK_YAW_SENS
 	camera_pitch = clampf(camera_pitch - relative.y * LOOK_PITCH_SENS, PITCH_MIN, PITCH_MAX)
 

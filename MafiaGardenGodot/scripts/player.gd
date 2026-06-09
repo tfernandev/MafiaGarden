@@ -12,7 +12,7 @@ const FLOOR_Y := 0.0
 @export var acceleration := 28.0
 @export var deceleration := 32.0
 @export var model_yaw_deg := -90.0
-@export var model_vertical_offset := 0.0
+@export var model_vertical_offset := 0.28
 @export var max_health := 100.0
 @export var fire_interval := 0.32
 @export var damage := 12.0
@@ -59,12 +59,15 @@ func _ready() -> void:
 	_camera_zoom = camera_zoom_default
 	_setup_camera_rig()
 
-	global_position.y = FLOOR_Y
+	floor_snap_length = 0.25
+	_snap_to_ground()
 	_pc_look_yaw = rotation.y
 	_pc_look_pitch = camera_default_pitch
-	CombatInput.set_camera_yaw(_pc_look_yaw)
-	CombatInput.set_camera_pitch(camera_default_pitch)
-	_aim_world_dir = CombatInput.get_aim_flat_direction()
+	var ci := CombatInputRef.instance()
+	if ci:
+		ci.set_camera_yaw(_pc_look_yaw)
+		ci.set_camera_pitch(camera_default_pitch)
+		_aim_world_dir = ci.get_aim_flat_direction()
 
 	var model := get_node_or_null("Model") as Node3D
 	if model:
@@ -132,7 +135,8 @@ func _set_camera_zoom(value: float) -> void:
 func _read_move_input() -> void:
 	var key_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	if _is_mobile_controls():
-		_move_input = CombatInput.get_touch_move_direction()
+		var ci := CombatInputRef.instance()
+		_move_input = ci.get_touch_move_direction() if ci else Vector2.ZERO
 	elif key_dir.length() > INPUT_THRESHOLD:
 		_move_input = key_dir
 	else:
@@ -168,13 +172,15 @@ func _is_mobile_controls() -> bool:
 
 func _get_camera_yaw() -> float:
 	if _is_mobile_controls():
-		return CombatInput.get_camera_yaw()
+		var ci := CombatInputRef.instance()
+		return ci.get_camera_yaw() if ci else _pc_look_yaw
 	return _pc_look_yaw
 
 
 func _get_camera_pitch() -> float:
 	if _is_mobile_controls():
-		return CombatInput.get_camera_pitch()
+		var ci := CombatInputRef.instance()
+		return ci.get_camera_pitch() if ci else _pc_look_pitch
 	return _pc_look_pitch
 
 
@@ -225,7 +231,8 @@ func _apply_movement(delta: float) -> void:
 	if _move_input.length() >= INPUT_THRESHOLD:
 		var strength := 1.0
 		if _is_mobile_controls():
-			strength = CombatInput.get_touch_move_strength()
+			var ci := CombatInputRef.instance()
+			strength = ci.get_touch_move_strength() if ci else 1.0
 			strength = lerpf(mobile_min_speed_scale, 1.0, strength)
 		target_velocity = _camera_relative_move(_move_input) * walk_speed * strength
 
@@ -243,6 +250,21 @@ func _apply_movement(delta: float) -> void:
 		_try_jump()
 
 	move_and_slide()
+	if is_on_floor():
+		_snap_to_ground()
+
+
+func _capsule_bottom_local() -> float:
+	var col := get_node_or_null("CollisionShape3D") as CollisionShape3D
+	if col == null or not col.shape is CapsuleShape3D:
+		return 0.35
+	var cap := col.shape as CapsuleShape3D
+	return col.position.y - cap.height * 0.5
+
+
+func _snap_to_ground() -> void:
+	# Mapa plano en y=0; get_floor_position() no existe en Godot 4.
+	global_position.y = FLOOR_Y - _capsule_bottom_local()
 
 
 func _check_fall_death() -> void:
@@ -253,7 +275,8 @@ func _check_fall_death() -> void:
 func _try_jump() -> void:
 	var jump := false
 	if _is_mobile_controls():
-		jump = CombatInput.consume_jump()
+		var ci := CombatInputRef.instance()
+		jump = ci.consume_jump() if ci else false
 	else:
 		jump = Input.is_action_just_pressed("jump")
 	if jump:
@@ -261,7 +284,8 @@ func _try_jump() -> void:
 
 
 func _try_shoot() -> void:
-	if not CombatInput.is_fire_pressed():
+	var ci := CombatInputRef.instance()
+	if ci == null or not ci.is_fire_pressed():
 		return
 	if _fire_timer > 0.0:
 		return
@@ -275,7 +299,8 @@ func _spawn_bullet() -> void:
 	var aim_dir := _get_camera_aim_direction()
 	aim_dir.y = clampf(aim_dir.y, -0.2, 0.2)
 	if aim_dir.length_squared() < 0.0001:
-		aim_dir = CombatInput.get_aim_flat_direction()
+		var ci := CombatInputRef.instance()
+		aim_dir = ci.get_aim_flat_direction() if ci else Vector3.FORWARD
 	else:
 		aim_dir = aim_dir.normalized()
 	var origin := global_position + Vector3(0.0, muzzle_height, 0.0) + aim_dir * 0.55

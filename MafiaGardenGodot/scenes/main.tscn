@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/mobile_jump_button.gd" id="12_jump_btn"]
 [ext_resource type="Script" path="res://scripts/crosshair.gd" id="13_crosshair"]
 [ext_resource type="Script" path="res://scripts/combat_ui.gd" id="10_combat_ui"]
+[ext_resource type="Script" path="res://scripts/move_joystick_visual.gd" id="14_joystick_vis"]
 [ext_resource type="PackedScene" path="res://scenes/enemy.tscn" id="5_enemy"]
 [ext_resource type="Script" uid="uid://bg68fc721mk51" path="res://scripts/weapon_attach.gd" id="6_weapon_attach"]
 [ext_resource type="PackedScene" path="res://scenes/weapons/rifle.tscn" id="7_rifle"]
@@ -86,7 +87,7 @@ theme_override_constants/separation = 6
 [node name="Hint" type="Label" parent="UI/CombatHUD" unique_id=49972777]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.88, 0.82, 1)
-text = "Móvil: izq=mover · der=mirar · FUEGO+SALTO · PC: WASD+RMB+Espacio"
+text = "Móvil: izq=mover · der=mirar · FUEGO arrastra+mira · PC: WASD+RMB+Espacio"
 
 [node name="PlayerHP" type="Label" parent="UI/CombatHUD" unique_id=1271081571]
 layout_mode = 2
@@ -97,6 +98,16 @@ text = "Tu squad: 100 / 100"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.55, 0.55, 1)
 text = "Enemiga: 100 / 100"
+
+[node name="MoveJoystickVisual" type="Control" parent="UI" unique_id=435550080]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("14_joystick_vis")
 
 [node name="Crosshair" type="Control" parent="UI" unique_id=435550079]
 layout_mode = 3
@@ -115,21 +126,21 @@ mouse_filter = 2
 script = ExtResource("13_crosshair")
 
 [node name="FireButton" type="Control" parent="UI" unique_id=551102331]
-custom_minimum_size = Vector2(92, 92)
+custom_minimum_size = Vector2(104, 104)
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -112.0
-offset_top = -112.0
+offset_left = -124.0
+offset_top = -124.0
 offset_right = -20.0
 offset_bottom = -20.0
 grow_horizontal = 0
 grow_vertical = 0
 script = ExtResource("9_fire_btn")
-button_radius = 44.0
+button_radius = 52.0
 
 [node name="JumpButton" type="Control" parent="UI" unique_id=551102332]
 custom_minimum_size = Vector2(80, 80)
@@ -139,14 +150,14 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -196.0
-offset_top = -112.0
-offset_right = -116.0
-offset_bottom = -32.0
+offset_left = -132.0
+offset_top = -212.0
+offset_right = -52.0
+offset_bottom = -132.0
 grow_horizontal = 0
 grow_vertical = 0
 script = ExtResource("12_jump_btn")
-button_radius = 38.0
+button_radius = 40.0
 
 [node name="GameOver" type="CanvasLayer" parent="." unique_id=1606748488]
 layer = 20

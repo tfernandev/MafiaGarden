@@ -79,10 +79,13 @@ func _show_game_over(victory: bool, subtitle: String, title_color: Color) -> voi
 		crosshair.visible = false
 	var fire_main := $UI.get_node_or_null("FireButton")
 	var jump_btn := $UI.get_node_or_null("JumpButton")
+	var joystick_vis := $UI.get_node_or_null("MoveJoystickVisual")
 	if fire_main:
 		fire_main.visible = false
 	if jump_btn:
 		jump_btn.visible = false
+	if joystick_vis:
+		joystick_vis.visible = false
 
 	process_mode = Node.PROCESS_MODE_WHEN_PAUSED
 	get_tree().paused = true

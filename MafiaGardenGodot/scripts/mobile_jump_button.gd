@@ -1,7 +1,8 @@
 extends Control
 
+## Botón de salto estilo Free Fire.
+
 @export var button_radius := 40.0
-@export var ring_width := 3.0
 
 var _touch_index := -1
 
@@ -22,7 +23,9 @@ func handle_touch(index: int, global_pos: Vector2, pressed: bool) -> void:
 		if not _is_inside(local_pos):
 			return
 		_touch_index = index
-		CombatInput.request_jump()
+		var ci := CombatInputRef.instance()
+		if ci:
+			ci.request_jump()
 		queue_redraw()
 	elif _touch_index == index:
 		_touch_index = -1
@@ -40,7 +43,7 @@ func _gui_input(event: InputEvent) -> void:
 		return
 	if event is InputEventScreenTouch:
 		var touch := event as InputEventScreenTouch
-		handle_touch(touch.index, touch.position, touch.pressed)
+		handle_touch(touch.index, touch.global_position, touch.pressed)
 		accept_event()
 	elif event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
@@ -52,14 +55,9 @@ func _gui_input(event: InputEvent) -> void:
 func _draw() -> void:
 	var center := size * 0.5
 	var pressed := _touch_index >= 0
-	var fill := Color(0.28, 0.62, 0.95, 0.95) if pressed else Color(0.18, 0.45, 0.72, 0.85)
-	var ring := Color(0.75, 0.9, 1.0, 0.95)
-	draw_circle(center, button_radius, fill)
-	draw_arc(center, button_radius - ring_width * 0.5, 0.0, TAU, 48, ring, ring_width, true)
-	draw_line(center + Vector2(0, 8), center + Vector2(0, -10), Color(1, 1, 1, 0.95), 3.5)
-	draw_line(center + Vector2(-7, -2), center + Vector2(0, -10), Color(1, 1, 1, 0.95), 3.0)
-	draw_line(center + Vector2(7, -2), center + Vector2(0, -10), Color(1, 1, 1, 0.95), 3.0)
+	MobileButtonDraw.draw_base(self, center, button_radius, pressed)
+	MobileButtonDraw.draw_jump_icon(self, center)
 
 
 func _is_inside(local_pos: Vector2) -> bool:
-	return local_pos.distance_to(size * 0.5) <= button_radius + 8.0
+	return local_pos.distance_to(size * 0.5) <= button_radius + 10.0
