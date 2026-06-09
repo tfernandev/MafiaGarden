@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://b8k3enemy_chica01"]
+
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_enemy"]
+[ext_resource type="PackedScene" path="res://models/chica_anim.glb" id="2_glb"]
+[ext_resource type="Script" path="res://scripts/weapon_attach.gd" id="3_weapon_attach"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/rifle.tscn" id="4_rifle"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_enemy"]
+radius = 0.35
+height = 1.8
+
+[node name="Enemy" type="CharacterBody3D"]
+script = ExtResource("1_enemy")
+model_vertical_offset = 0.28
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+shape = SubResource("CapsuleShape3D_enemy")
+
+[node name="Model" type="Node3D" parent="."]
+
+[node name="chica_anim" parent="Model" instance=ExtResource("2_glb")]
+
+[node name="WeaponAttach" type="Node3D" parent="Model"]
+script = ExtResource("3_weapon_attach")
+weapon_scene = ExtResource("4_rifle")
+weapon_position = Vector3(0, 0.02, 0.04)
+weapon_rotation_degrees = Vector3(-90, 0, 0)
+weapon_scale = Vector3(1, 1, 1)

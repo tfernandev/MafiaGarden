@@ -1,96 +1,211 @@
 [gd_scene format=3 uid="uid://wwgsd8p661ow"]
 
-[ext_resource type="Script" uid="uid://c2eykemcmu0oi" path="res://scripts/player.gd" id="1_player"]
-[ext_resource type="PackedScene" uid="uid://77jda4s5dfmg" path="res://models/soldado_anim.glb" id="2_glb"]
-[ext_resource type="Script" uid="uid://cmaawqx74m6cp" path="res://scripts/virtual_joystick.gd" id="3_joystick"]
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_street"]
-size = Vector2(30, 40)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_street"]
-albedo_color = Color(0.24, 0.24, 0.28, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
-size = Vector3(30, 0.2, 40)
+[ext_resource type="Script" uid="uid://bde4jtdc3c1gh" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" uid="uid://c2eykemcmu0oi" path="res://scripts/player.gd" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://77jda4s5dfmg" path="res://models/soldado_anim.glb" id="3_glb"]
+[ext_resource type="Script" path="res://scripts/mobile_fire_button.gd" id="9_fire_btn"]
+[ext_resource type="Script" path="res://scripts/mobile_jump_button.gd" id="12_jump_btn"]
+[ext_resource type="Script" path="res://scripts/crosshair.gd" id="13_crosshair"]
+[ext_resource type="Script" path="res://scripts/combat_ui.gd" id="10_combat_ui"]
+[ext_resource type="PackedScene" path="res://scenes/enemy.tscn" id="5_enemy"]
+[ext_resource type="Script" uid="uid://bg68fc721mk51" path="res://scripts/weapon_attach.gd" id="6_weapon_attach"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/rifle.tscn" id="7_rifle"]
+[ext_resource type="PackedScene" path="res://scenes/street_map.tscn" id="11_street_map"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
 radius = 0.35
 height = 1.8
 
-[node name="Main" type="Node3D" unique_id=1657939362]
+[sub_resource type="BoxMesh" id="BoxMesh_aim_line"]
+size = Vector3(0.18, 0.04, 7)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1871733172]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aim"]
+transparency = 1
+albedo_color = Color(1, 0.55, 0.2, 0.55)
+emission_enabled = true
+emission = Color(1, 0.45, 0.1, 1)
+emission_energy_multiplier = 1.5
+
+[node name="Main" type="Node3D" unique_id=234511837]
+script = ExtResource("1_main")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=36490390]
 transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 8, 0)
 light_energy = 1.2
 shadow_enabled = true
 
-[node name="Street" type="StaticBody3D" parent="." unique_id=607837531]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+[node name="StreetMap" parent="." unique_id=1422006177 instance=ExtResource("11_street_map")]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Street" unique_id=528352801]
-mesh = SubResource("PlaneMesh_street")
-surface_material_override/0 = SubResource("StandardMaterial3D_street")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Street" unique_id=258947147]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
-shape = SubResource("BoxShape3D_floor")
-
-[node name="Player" type="CharacterBody3D" parent="." unique_id=993253018]
+[node name="Player" type="CharacterBody3D" parent="." unique_id=266334519]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
-script = ExtResource("1_player")
+script = ExtResource("2_player")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=1867187423]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=285578266]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 shape = SubResource("CapsuleShape3D_player")
 
-[node name="SpringArm3D" type="SpringArm3D" parent="Player" unique_id=913410141]
-transform = Transform3D(-1, 0, 0, 0, 0.978148, 0.207912, 0, 0.207912, -0.978148, 0, 1.55, 0)
-spring_length = 5.2
-margin = 0.25
-collision_mask = 1
+[node name="SpringArm3D" type="SpringArm3D" parent="Player" unique_id=1300836630]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
+spring_length = 1.25
+margin = 0.15
 
-[node name="Camera3D" type="Camera3D" parent="Player/SpringArm3D" unique_id=185725995]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+[node name="Camera3D" type="Camera3D" parent="Player/SpringArm3D" unique_id=1356984143]
 current = true
-fov = 52.0
+fov = 62.0
 
-[node name="Model" type="Node3D" parent="Player" unique_id=306137497]
+[node name="Model" type="Node3D" parent="Player" unique_id=1746727079]
 
-[node name="soldado_anim" parent="Player/Model" unique_id=431344699 instance=ExtResource("2_glb")]
+[node name="soldado_anim" parent="Player/Model" unique_id=19731851 instance=ExtResource("3_glb")]
 
-[node name="UI" type="CanvasLayer" parent="." unique_id=1604828267]
+[node name="WeaponAttach" type="Node3D" parent="Player/Model" unique_id=1326772777]
+script = ExtResource("6_weapon_attach")
+weapon_scene = ExtResource("7_rifle")
 
-[node name="Hint" type="Label" parent="UI" unique_id=1281431439]
+[node name="AimMarker" type="Node3D" parent="Player" unique_id=1864862878]
+visible = false
+
+[node name="Line" type="MeshInstance3D" parent="Player/AimMarker" unique_id=879700055]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 3.5)
+mesh = SubResource("BoxMesh_aim_line")
+surface_material_override/0 = SubResource("StandardMaterial3D_aim")
+
+[node name="Enemy" parent="." unique_id=323016780 instance=ExtResource("5_enemy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 12)
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1377503353]
+layer = 10
+script = ExtResource("10_combat_ui")
+
+[node name="CombatHUD" type="VBoxContainer" parent="UI" unique_id=1534231198]
 offset_left = 16.0
 offset_top = 16.0
+offset_right = 380.0
+offset_bottom = 140.0
+theme_override_constants/separation = 6
+
+[node name="Hint" type="Label" parent="UI/CombatHUD" unique_id=49972777]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.88, 0.82, 1)
-text = "MafiaGarden — WASD / joystick. Al probar F5: barra arriba en ENTRADA (no 3D)."
+text = "Móvil: izq=mover · der=mirar · FUEGO+SALTO · PC: WASD+RMB+Espacio"
 
-[node name="VirtualJoystick" type="Control" parent="UI" unique_id=1925155826]
-custom_minimum_size = Vector2(160, 160)
+[node name="PlayerHP" type="Label" parent="UI/CombatHUD" unique_id=1271081571]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.75, 0.55, 1)
+text = "Tu squad: 100 / 100"
+
+[node name="EnemyHP" type="Label" parent="UI/CombatHUD" unique_id=1941925899]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.55, 0.55, 1)
+text = "Enemiga: 100 / 100"
+
+[node name="Crosshair" type="Control" parent="UI" unique_id=435550079]
 layout_mode = 3
-anchors_preset = 2
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("13_crosshair")
+
+[node name="FireButton" type="Control" parent="UI" unique_id=551102331]
+custom_minimum_size = Vector2(92, 92)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
 anchor_top = 1.0
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 24.0
-offset_top = -184.0
-offset_right = 184.0
-offset_bottom = -24.0
+offset_left = -112.0
+offset_top = -112.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
 grow_vertical = 0
-script = ExtResource("3_joystick")
+script = ExtResource("9_fire_btn")
+button_radius = 44.0
 
-[node name="Base" type="ColorRect" parent="UI/VirtualJoystick" unique_id=2025469912]
-layout_mode = 0
-offset_right = 160.0
-offset_bottom = 160.0
-mouse_filter = 2
-color = Color(0.12, 0.12, 0.16, 0.45)
+[node name="JumpButton" type="Control" parent="UI" unique_id=551102332]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -196.0
+offset_top = -112.0
+offset_right = -116.0
+offset_bottom = -32.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("12_jump_btn")
+button_radius = 38.0
 
-[node name="Knob" type="ColorRect" parent="UI/VirtualJoystick" unique_id=13434696]
-layout_mode = 0
-offset_left = 56.0
-offset_top = 56.0
-offset_right = 104.0
-offset_bottom = 104.0
-mouse_filter = 2
-color = Color(0.75, 0.72, 0.65, 0.85)
+[node name="GameOver" type="CanvasLayer" parent="." unique_id=1606748488]
+layer = 20
+process_mode = 2
+visible = false
+
+[node name="Dim" type="ColorRect" parent="GameOver" unique_id=1451960876]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.02, 0.04, 0.72)
+
+[node name="Center" type="CenterContainer" parent="GameOver" unique_id=1840990849]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="GameOver/Center" unique_id=531190773]
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="GameOver/Center/Panel" unique_id=657547629]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="GameOver/Center/Panel/VBox" unique_id=2112424184]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Derrota"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="GameOver/Center/Panel/VBox" unique_id=1382107626]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.76, 0.72, 1)
+text = "..."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Spacer" type="Control" parent="GameOver/Center/Panel/VBox" unique_id=2061864915]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="RestartButton" type="Button" parent="GameOver/Center/Panel/VBox" unique_id=1453968557]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Reintentar"
+
+[node name="MenuButton" type="Button" parent="GameOver/Center/Panel/VBox" unique_id=1458172873]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Menú principal"
+
+[node name="Hint" type="Label" parent="GameOver/Center/Panel/VBox" unique_id=459293998]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.54, 0.5, 1)
+theme_override_font_sizes/font_size = 12
+text = "Enter / R = reintentar · Esc = menú"
+horizontal_alignment = 1

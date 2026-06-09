@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://mafia_bullet_hit"]
+
+[ext_resource type="Script" path="res://scripts/vfx/bullet_hit.gd" id="1_hit"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_spark"]
+shading_mode = 0
+albedo_color = Color(1, 0.85, 0.35, 1)
+emission_enabled = true
+emission = Color(1, 0.7, 0.15, 1)
+billboard_mode = 3
+
+[sub_resource type="QuadMesh" id="QuadMesh_spark"]
+size = Vector2(0.12, 0.12)
+material = SubResource("StandardMaterial3D_spark")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hit"]
+emission_shape = 1
+emission_sphere_radius = 0.08
+direction = Vector3(0, 1, 0)
+spread = 180.0
+initial_velocity_min = 1.5
+initial_velocity_max = 4.0
+gravity = Vector3(0, -4, 0)
+scale_min = 0.04
+scale_max = 0.1
+color = Color(1, 0.75, 0.2, 1)
+
+[node name="BulletHit" type="Node3D"]
+script = ExtResource("1_hit")
+
+[node name="Particles" type="GPUParticles3D" parent="."]
+amount = 12
+lifetime = 0.25
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_hit")
+draw_pass_1 = SubResource("QuadMesh_spark")

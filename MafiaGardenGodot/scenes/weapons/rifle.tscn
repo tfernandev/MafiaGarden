@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://mafia_rifle_shared"]
+
+[ext_resource type="PackedScene" path="res://models/weapons/ak-47s.glb" id="1_ak"]
+
+[node name="Rifle" type="Node3D"]
+
+[node name="ak-47s" parent="." instance=ExtResource("1_ak")]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0)

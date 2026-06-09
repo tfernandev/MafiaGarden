@@ -9,6 +9,10 @@ Juego mobile: estrategia en mapa + asalto en calle (2.5D). Bandas ficticias, est
 | [`MafiaGardenGodot/`](MafiaGardenGodot/) | Godot 4.6 + GDScript | **Motor principal** — locomoción, joystick, cámara |
 | [`MafiaGarden/`](MafiaGarden/) | PWA + Vite + Three.js | Proto web + documentación de diseño |
 
+## Créditos de terceros
+
+- [`CREDITS.md`](CREDITS.md) — atribución CC BY 4.0 (arma Sketchfab), etc.
+
 ## Documentación
 
 - GDD: [`MafiaGarden/mafia-garden-gdd.md`](MafiaGarden/mafia-garden-gdd.md)
