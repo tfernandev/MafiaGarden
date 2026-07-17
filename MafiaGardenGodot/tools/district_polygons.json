@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "source_image": "",
+  "image_size": [3070, 2048],
+  "districts": {
+    "barrio_viejo": {
+      "display_name": "Barrio Viejo",
+      "color": "#c88c50",
+      "points_norm": [[0.02, 0.02], [0.48, 0.02], [0.48, 0.48], [0.02, 0.48]]
+    },
+    "mansion_norte": {
+      "display_name": "Mansión Norte",
+      "color": "#78c850",
+      "points_norm": [[0.52, 0.02], [0.98, 0.02], [0.98, 0.40], [0.52, 0.40]]
+    },
+    "centro": {
+      "display_name": "Centro",
+      "color": "#7878ff",
+      "points_norm": [[0.02, 0.52], [0.45, 0.52], [0.45, 0.95], [0.02, 0.95]]
+    },
+    "villa_roja": {
+      "display_name": "Villa Roja",
+      "color": "#ff5050",
+      "points_norm": [[0.50, 0.52], [0.64, 0.52], [0.64, 0.98], [0.50, 0.98]]
+    },
+    "mercado_sur": {
+      "display_name": "Mercado Sur",
+      "color": "#ffc83c",
+      "points_norm": [[0.62, 0.58], [0.98, 0.58], [0.98, 0.98], [0.62, 0.98]]
+    },
+    "puerto_norte": {
+      "display_name": "Puerto Norte",
+      "color": "#50a0ff",
+      "points_norm": [[0.48, 0.38], [0.98, 0.38], [0.98, 0.98], [0.48, 0.98]]
+    }
+  }
+}

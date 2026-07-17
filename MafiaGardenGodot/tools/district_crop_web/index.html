@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MafiaGarden — Recorte por distrito</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Recorte por distrito</h1>
+    <div class="actions">
+      <label class="btn primary">
+        Abrir mapa
+        <input type="file" id="fileInput" accept="image/*" hidden />
+      </label>
+      <button class="btn" id="btnLoadJson" type="button">Cargar JSON</button>
+      <button class="btn" id="btnSaveJson" type="button">Guardar JSON</button>
+      <button class="btn accent" id="btnExportAll" type="button">Exportar distritos</button>
+      <button class="btn" id="btnPreview" type="button">Vista previa</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <p class="hint">Dibujá el contorno de cada barrio siguiendo calles y rutas. No hace falta que sea un rectángulo.</p>
+
+      <div class="district-list" id="districtList"></div>
+
+      <div class="panel">
+        <label>Suavizado borde <input type="range" id="feather" min="0" max="8" value="2" /></label>
+        <label class="check"><input type="checkbox" id="showAll" checked /> Mostrar todos</label>
+        <button class="btn danger full" id="btnClear" type="button">Borrar polígono</button>
+      </div>
+
+      <div class="help">
+        <strong>Controles</strong>
+        <ul>
+          <li>Clic: agregar vértice</li>
+          <li>Arrastrar vértice: mover</li>
+          <li>Clic der. en vértice: borrar</li>
+          <li>Rueda: zoom</li>
+          <li>Espacio + arrastrar: mover vista</li>
+          <li>Teclas 1–6: cambiar distrito</li>
+        </ul>
+      </div>
+
+      <p class="status" id="status">Abrí un mapa para empezar</p>
+    </aside>
+
+    <main class="canvas-wrap" id="canvasWrap">
+      <canvas id="canvas"></canvas>
+    </main>
+  </div>
+
+  <input type="file" id="jsonInput" accept=".json,application/json" hidden />
+
+  <script src="app.js"></script>
+</body>
+</html>

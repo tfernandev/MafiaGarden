@@ -17,3 +17,8 @@ Thumbs.db
 *.local
 .env
 .env.*
+
+# Blender backups / debug assets
+*.blend1
+**/ambient/debug/
+mapacompleto.png

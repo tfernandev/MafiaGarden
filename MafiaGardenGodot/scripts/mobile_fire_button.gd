@@ -46,7 +46,7 @@ func handle_touch(index: int, global_pos: Vector2, pressed: bool) -> void:
 		_release()
 
 
-func handle_drag(index: int, global_pos: Vector2, relative: Vector2) -> void:
+func handle_drag(index: int, _global_pos: Vector2, relative: Vector2) -> void:
 	if not _held or _touch_index != index:
 		return
 	if follow_while_held and relative.length_squared() > 0.0:

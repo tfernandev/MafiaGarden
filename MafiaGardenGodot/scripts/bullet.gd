@@ -84,13 +84,20 @@ func _physics_process(delta: float) -> void:
 
 
 func _handle_hit(body: Node3D, hit_pos: Vector3) -> void:
+	var damaged := false
 	if body:
 		if team == Team.PLAYER and body.is_in_group("enemies"):
 			if body.has_method("take_damage") and body.has_method("is_alive") and body.is_alive():
 				body.take_damage(damage)
-		elif team == Team.ENEMY and body.is_in_group("player"):
+				damaged = true
+		elif team == Team.ENEMY and (body.is_in_group("player") or body.is_in_group("allies")):
 			if body.has_method("take_damage") and body.has_method("is_alive") and body.is_alive():
 				body.take_damage(damage)
+				damaged = true
+	if damaged:
+		CombatAudio.play("hit")
+	elif body is StaticBody3D:
+		CombatAudio.play("hit")
 	_spawn_hit_fx(hit_pos)
 	global_position = hit_pos
 	queue_free()

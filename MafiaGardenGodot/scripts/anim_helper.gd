@@ -77,9 +77,43 @@ static func play_idle(player: AnimationPlayer, blend: float = 0.15) -> bool:
 		or play_by_keywords(player, IDLE_KEYWORDS, blend)
 
 
-static func play_walk(player: AnimationPlayer, blend: float = 0.15) -> bool:
-	return play_first(player, ["WalkingSoldado", "Walkingchica", "Walking"], blend) \
-		or play_by_keywords(player, WALK_KEYWORDS, blend)
+static func play_walk(player: AnimationPlayer, blend: float = 0.15, speed: float = 1.0) -> bool:
+	return play_first(player, ["WalkingSoldado", "Walkingchica", "Walking"], blend, speed) \
+		or play_by_keywords(player, WALK_KEYWORDS, blend, speed)
+
+
+## Anula solo X/Z del hueso Hips (root motion horizontal Mixamo); conserva Y para no hundir el mesh.
+static func strip_hips_horizontal_root_motion(player: AnimationPlayer) -> int:
+	if player == null:
+		return 0
+	var modified := 0
+	for anim_name in player.get_animation_list():
+		var anim := player.get_animation(anim_name)
+		if anim == null:
+			continue
+		for i in range(anim.get_track_count()):
+			if anim.track_get_type(i) != Animation.TYPE_POSITION_3D:
+				continue
+			if not _is_hips_position_path(str(anim.track_get_path(i))):
+				continue
+			var key_count := anim.track_get_key_count(i)
+			if key_count == 0:
+				continue
+			var anchor: Vector3 = anim.track_get_key_value(i, 0)
+			for k in range(key_count):
+				var pos: Vector3 = anim.track_get_key_value(i, k)
+				anim.track_set_key_value(i, k, Vector3(anchor.x, pos.y, anchor.z))
+			modified += 1
+	return modified
+
+
+static func _is_hips_position_path(path: String) -> bool:
+	var lower := path.to_lower()
+	if "hips" in lower:
+		return true
+	if lower.ends_with("root") or ":root" in lower or "/root" in lower:
+		return true
+	return false
 
 
 static func play_fire(player: AnimationPlayer, blend: float = 0.1) -> bool:

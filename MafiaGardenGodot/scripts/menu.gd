@@ -1,6 +1,6 @@
 extends Control
 
-const GAME_SCENE := "res://scenes/main.tscn"
+const CITY_MAP_SCENE := "res://scenes/city_map.tscn"
 const TAG := "[Menu]"
 
 @onready var _play_button: Button = $Center/Panel/VBox/PlayButton
@@ -81,7 +81,7 @@ func _on_play_pressed() -> void:
 	_quit_button.disabled = true
 	print(TAG, " _on_play_pressed() -> transición")
 	await _play_launch_animation()
-	get_tree().change_scene_to_file(GAME_SCENE)
+	get_tree().change_scene_to_file(CITY_MAP_SCENE)
 
 
 func _on_quit_pressed() -> void:

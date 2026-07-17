@@ -24,6 +24,10 @@ const FLOOR_Y := 0.0
 @export_group("Mobile")
 @export_range(0.35, 1.0, 0.05) var mobile_min_speed_scale := 0.5
 
+@export_group("Animation")
+@export var strip_locomotion_root_motion := true
+@export_range(0.05, 1.0, 0.05) var walk_anim_speed_min := 0.1
+
 @export_group("Camera")
 @export var camera_shoulder_height := 1.05
 @export var camera_zoom_min := 0.95
@@ -48,10 +52,14 @@ var _is_shooting := false
 var _shoot_anim_timer := 0.0
 var _pc_look_yaw := 0.0
 var _pc_look_pitch := 0.14
+var _actual_horizontal_speed := 0.0
+var _physics_pos_prev := Vector3.ZERO
 
 
 func _ready() -> void:
 	add_to_group("player")
+	max_health = GameState.get_player_max_health()
+	damage = GameState.get_player_damage()
 	health = max_health
 	_spring_arm = get_node_or_null("SpringArm3D") as SpringArm3D
 	if _spring_arm:
@@ -60,6 +68,12 @@ func _ready() -> void:
 	_setup_camera_rig()
 
 	floor_snap_length = 0.25
+	safe_margin = 0.1
+	max_slides = 8
+	up_direction = Vector3.UP
+	floor_constant_speed = true
+	collision_layer = 1
+	collision_mask = 1
 	_snap_to_ground()
 	_pc_look_yaw = rotation.y
 	_pc_look_pitch = camera_default_pitch
@@ -76,7 +90,10 @@ func _ready() -> void:
 
 	_animation_player = AnimHelper.find_animation_player(self)
 	if _animation_player:
+		if strip_locomotion_root_motion:
+			AnimHelper.strip_hips_horizontal_root_motion(_animation_player)
 		AnimHelper.play_idle(_animation_player)
+	_physics_pos_prev = global_position
 
 	health_changed.emit(health, max_health)
 
@@ -116,6 +133,8 @@ func _physics_process(delta: float) -> void:
 func take_damage(amount: float) -> void:
 	if _is_dead:
 		return
+	if amount > 0.0:
+		CombatAudio.play("hurt")
 	health = maxf(health - amount, 0.0)
 	health_changed.emit(health, max_health)
 	if health <= 0.0:
@@ -228,13 +247,15 @@ func _apply_aim_and_camera() -> void:
 
 func _apply_movement(delta: float) -> void:
 	var target_velocity := Vector3.ZERO
+	var input_strength := 1.0
 	if _move_input.length() >= INPUT_THRESHOLD:
-		var strength := 1.0
 		if _is_mobile_controls():
 			var ci := CombatInputRef.instance()
-			strength = ci.get_touch_move_strength() if ci else 1.0
-			strength = lerpf(mobile_min_speed_scale, 1.0, strength)
-		target_velocity = _camera_relative_move(_move_input) * walk_speed * strength
+			input_strength = ci.get_touch_move_strength() if ci else 1.0
+			input_strength = lerpf(mobile_min_speed_scale, 1.0, input_strength)
+		target_velocity = _camera_relative_move(_move_input) * walk_speed * input_strength
+	if is_on_wall():
+		target_velocity = _flatten_against_wall_normal(target_velocity, get_wall_normal())
 
 	var rate := acceleration if target_velocity.length_squared() > 0.001 else deceleration
 	var horizontal := Vector3(velocity.x, 0.0, velocity.z)
@@ -249,9 +270,97 @@ func _apply_movement(delta: float) -> void:
 			velocity.y = 0.0
 		_try_jump()
 
+	var horizontal_motion := Vector3(velocity.x, 0.0, velocity.z) * delta
+	var clipped_h := _clip_horizontal_motion(horizontal_motion)
+	if delta > 0.0:
+		var wanted_len := horizontal_motion.length()
+		var allowed_len := clipped_h.length()
+		if wanted_len > 0.001 and allowed_len < wanted_len * 0.85:
+			velocity.x = 0.0
+			velocity.z = 0.0
+		else:
+			velocity.x = clipped_h.x / delta
+			velocity.z = clipped_h.z / delta
+
 	move_and_slide()
+	_block_velocity_into_static()
+	_separate_from_static_horizontal()
+	if is_on_wall():
+		var flat_vel := _flatten_against_wall_normal(Vector3(velocity.x, 0.0, velocity.z), get_wall_normal())
+		velocity.x = flat_vel.x
+		velocity.z = flat_vel.z
+
 	if is_on_floor():
 		_snap_to_ground()
+
+	var delta_pos := global_position - _physics_pos_prev
+	_actual_horizontal_speed = Vector3(delta_pos.x, 0.0, delta_pos.z).length() / delta if delta > 0.0 else 0.0
+	_physics_pos_prev = global_position
+
+
+func _clip_horizontal_motion(horizontal_motion: Vector3) -> Vector3:
+	if horizontal_motion.length_squared() < 0.000001:
+		return horizontal_motion
+	var params := PhysicsTestMotionParameters3D.new()
+	params.from = global_transform
+	params.motion = Vector3(horizontal_motion.x, 0.0, horizontal_motion.z)
+	params.margin = safe_margin
+	params.collide_separation_ray = false
+	params.recovery_as_collision = false
+	var result := PhysicsTestMotionResult3D.new()
+	if PhysicsServer3D.body_test_motion(get_rid(), params, result):
+		var travel := result.get_travel()
+		return Vector3(travel.x, 0.0, travel.z)
+	return horizontal_motion
+
+
+func _flatten_against_wall_normal(horizontal: Vector3, normal: Vector3) -> Vector3:
+	normal.y = 0.0
+	if normal.length_squared() < 0.0001:
+		return horizontal
+	normal = normal.normalized()
+	var into_wall := horizontal.dot(normal)
+	if into_wall < 0.0:
+		return horizontal - normal * into_wall
+	return horizontal
+
+
+func _block_velocity_into_static() -> void:
+	var horizontal := Vector3(velocity.x, 0.0, velocity.z)
+	for i in get_slide_collision_count():
+		var collision := get_slide_collision(i)
+		if collision == null:
+			continue
+		var collider := collision.get_collider()
+		if collider == null or not collider is StaticBody3D:
+			continue
+		horizontal = _flatten_against_wall_normal(horizontal, collision.get_normal())
+	velocity.x = horizontal.x
+	velocity.z = horizontal.z
+
+
+func _separate_from_static_horizontal() -> Vector3:
+	# En superficie plana (suelo o caja) no empujar horizontalmente: sacaba al jugador del tope.
+	if is_on_floor() and get_floor_normal().y > 0.7:
+		return Vector3.ZERO
+	var total := Vector3.ZERO
+	for _i in 3:
+		var params := PhysicsTestMotionParameters3D.new()
+		params.from = global_transform
+		params.motion = Vector3.ZERO
+		params.margin = safe_margin + 0.02
+		params.collide_separation_ray = true
+		params.recovery_as_collision = true
+		var result := PhysicsTestMotionResult3D.new()
+		if not PhysicsServer3D.body_test_motion(get_rid(), params, result):
+			break
+		var sep := result.get_travel()
+		sep.y = 0.0
+		if sep.length_squared() < 0.0000001:
+			break
+		global_position += sep
+		total += sep
+	return total
 
 
 func _capsule_bottom_local() -> float:
@@ -263,8 +372,40 @@ func _capsule_bottom_local() -> float:
 
 
 func _snap_to_ground() -> void:
-	# Mapa plano en y=0; get_floor_position() no existe en Godot 4.
-	global_position.y = FLOOR_Y - _capsule_bottom_local()
+	var floor_y := _get_support_ground_y()
+	global_position.y = floor_y - _capsule_bottom_local()
+
+
+func _get_support_ground_y() -> float:
+	if is_on_floor():
+		var best_y := -INF
+		for i in get_slide_collision_count():
+			var col := get_slide_collision(i)
+			if col == null:
+				continue
+			var normal := col.get_normal()
+			if normal.y < 0.55:
+				continue
+			best_y = maxf(best_y, col.get_position().y)
+		if best_y > -INF:
+			return best_y
+	return _raycast_ground_y()
+
+
+func _raycast_ground_y() -> float:
+	var world := get_world_3d()
+	if world == null:
+		return FLOOR_Y
+	var space := world.direct_space_state
+	var from := global_position + Vector3(0.0, 1.2, 0.0)
+	var to := global_position + Vector3(0.0, -6.0, 0.0)
+	var params := PhysicsRayQueryParameters3D.create(from, to)
+	params.exclude = [get_rid()]
+	params.collision_mask = collision_mask
+	var hit := space.intersect_ray(params)
+	if hit.is_empty():
+		return FLOOR_Y
+	return hit.position.y
 
 
 func _check_fall_death() -> void:
@@ -295,6 +436,15 @@ func _try_shoot() -> void:
 	_spawn_bullet()
 
 
+func _get_muzzle_origin(aim_dir: Vector3) -> Vector3:
+	var attach := get_node_or_null("Model/WeaponAttach")
+	if attach and attach.has_method("get_muzzle_global_position"):
+		var muzzle: Vector3 = attach.get_muzzle_global_position()
+		if muzzle.distance_squared_to(global_position) > 0.01:
+			return muzzle
+	return global_position + Vector3(0.0, muzzle_height, 0.0) + aim_dir * 0.55
+
+
 func _spawn_bullet() -> void:
 	var aim_dir := _get_camera_aim_direction()
 	aim_dir.y = clampf(aim_dir.y, -0.2, 0.2)
@@ -303,7 +453,7 @@ func _spawn_bullet() -> void:
 		aim_dir = ci.get_aim_flat_direction() if ci else Vector3.FORWARD
 	else:
 		aim_dir = aim_dir.normalized()
-	var origin := global_position + Vector3(0.0, muzzle_height, 0.0) + aim_dir * 0.55
+	var origin := _get_muzzle_origin(aim_dir)
 	var bullet := BULLET_SCENE.instantiate()
 	get_parent().add_child(bullet)
 	if bullet.has_method("setup"):
@@ -311,6 +461,7 @@ func _spawn_bullet() -> void:
 	var flash := MUZZLE_FLASH.instantiate()
 	get_parent().add_child(flash)
 	flash.global_position = origin
+	CombatAudio.play("shoot_player")
 
 
 func _update_animation() -> void:
@@ -320,9 +471,16 @@ func _update_animation() -> void:
 		if AnimHelper.play_fire(_animation_player):
 			return
 	if _move_input.length() >= INPUT_THRESHOLD:
-		AnimHelper.play_walk(_animation_player)
+		AnimHelper.play_walk(_animation_player, 0.15, _get_walk_anim_speed_scale())
 	else:
 		AnimHelper.play_idle(_animation_player)
+
+
+func _get_walk_anim_speed_scale() -> float:
+	if walk_speed < 0.01:
+		return 1.0
+	var ratio := _actual_horizontal_speed / walk_speed
+	return clampf(ratio, walk_anim_speed_min, 1.25)
 
 
 func _die() -> void:

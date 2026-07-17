@@ -81,13 +81,13 @@ func _physics_process(delta: float) -> void:
 		if _shoot_anim_timer <= 0.0:
 			_is_shooting = false
 
-	var player := _get_player()
-	if player == null or not player.has_method("is_alive") or not player.is_alive():
+	var target := _get_combat_target()
+	if target == null or not target.has_method("is_alive") or not target.is_alive():
 		velocity = Vector3.ZERO
 		_update_animation(false, false)
 		return
 
-	var to_player := player.global_position - global_position
+	var to_player := target.global_position - global_position
 	to_player.y = 0.0
 	var dist := to_player.length()
 	var flat_dir := to_player.normalized() if dist > 0.05 else Vector3.FORWARD
@@ -99,7 +99,7 @@ func _physics_process(delta: float) -> void:
 	_update_combat_readiness(dist, delta)
 
 	var moving := _apply_tactics(delta, dist, flat_dir)
-	_try_combat_shots(player, dist)
+	_try_combat_shots(target, dist)
 	_update_animation(_is_shooting, moving)
 
 
@@ -200,6 +200,7 @@ func _spawn_bullet_at_player(player: Node3D, dist: float) -> void:
 	var flash := MUZZLE_FLASH.instantiate()
 	get_parent().add_child(flash)
 	flash.global_position = origin
+	CombatAudio.play("shoot_enemy")
 
 
 func _apply_aim_error(dir: Vector3, dist: float) -> Vector3:
@@ -236,11 +237,26 @@ func _find_character_anim_player(model: Node3D) -> AnimationPlayer:
 	return AnimHelper.find_animation_player(self)
 
 
+func _get_combat_target() -> Node3D:
+	var best: Node3D = null
+	var best_d := INF
+	var candidates: Array = []
+	candidates.append_array(get_tree().get_nodes_in_group("player"))
+	candidates.append_array(get_tree().get_nodes_in_group("allies"))
+	for node in candidates:
+		if node == null or not (node is Node3D):
+			continue
+		if node.has_method("is_alive") and not node.is_alive():
+			continue
+		var d: float = global_position.distance_squared_to((node as Node3D).global_position)
+		if d < best_d:
+			best_d = d
+			best = node as Node3D
+	return best
+
+
 func _get_player() -> Node3D:
-	var players := get_tree().get_nodes_in_group("player")
-	if players.is_empty():
-		return null
-	return players[0] as Node3D
+	return _get_combat_target()
 
 
 func _update_animation(shooting: bool, walking: bool) -> void:

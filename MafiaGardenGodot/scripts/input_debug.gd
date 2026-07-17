@@ -20,6 +20,8 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if OS.has_feature("mobile"):
+		return
 	if event is InputEventScreenTouch:
 		var touch := event as InputEventScreenTouch
 		print(

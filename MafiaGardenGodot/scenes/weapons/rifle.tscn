@@ -4,5 +4,13 @@
 
 [node name="Rifle" type="Node3D"]
 
-[node name="ak-47s" parent="." instance=ExtResource("1_ak")]
-transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0)
+[node name="Grip" type="Node3D" parent="."]
+
+[node name="ak-47s" parent="Grip" instance=ExtResource("1_ak")]
+transform = Transform3D(0.034, 0, 0, 0, 0, 0.034, 0, -0.034, 0, 0, 0.01, 0.046)
+
+[node name="Foregrip" type="Marker3D" parent="Grip"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0.13)
+
+[node name="Muzzle" type="Marker3D" parent="Grip"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, 0.24)

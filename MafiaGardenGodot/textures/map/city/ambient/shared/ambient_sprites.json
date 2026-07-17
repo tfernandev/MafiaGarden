@@ -1,0 +1,338 @@
+{
+  "version": 1,
+  "sprites": [
+    {
+      "id": "fountain_plaza",
+      "quadrant": "superior_izquierda",
+      "file": "superior_izquierda/fountain_plaza_sheet.png",
+      "type": "animated_sheet",
+      "frame_size": [
+        96,
+        96
+      ],
+      "frame_count": 4,
+      "fps": 8,
+      "position": [
+        0.48,
+        0.42
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "fountain_garden",
+      "quadrant": "superior_derecha",
+      "file": "superior_derecha/fountain_garden_sheet.png",
+      "type": "animated_sheet",
+      "frame_size": [
+        80,
+        80
+      ],
+      "frame_count": 4,
+      "fps": 8,
+      "position": [
+        0.62,
+        0.28
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "fountain_park",
+      "quadrant": "superior_derecha",
+      "file": "superior_derecha/fountain_park_sheet.png",
+      "type": "animated_sheet",
+      "frame_size": [
+        80,
+        80
+      ],
+      "frame_count": 4,
+      "fps": 8,
+      "position": [
+        0.38,
+        0.52
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "smoke_a",
+      "quadrant": "superior_derecha",
+      "file": "superior_derecha/smoke_chimney_a_sheet.png",
+      "type": "animated_sheet",
+      "frame_size": [
+        64,
+        96
+      ],
+      "frame_count": 6,
+      "fps": 6,
+      "position": [
+        0.78,
+        0.22
+      ],
+      "pivot": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "id": "smoke_b",
+      "quadrant": "superior_derecha",
+      "file": "superior_derecha/smoke_chimney_b_sheet.png",
+      "type": "animated_sheet",
+      "frame_size": [
+        64,
+        96
+      ],
+      "frame_count": 6,
+      "fps": 6,
+      "position": [
+        0.88,
+        0.35
+      ],
+      "pivot": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "id": "water_mask_superior_derecha",
+      "quadrant": "superior_derecha",
+      "file": "superior_derecha/water_mask.png",
+      "type": "water_mask",
+      "frame_size": [
+        1536,
+        1024
+      ],
+      "frame_count": 1,
+      "fps": 0,
+      "position": [
+        0.0,
+        0.0
+      ],
+      "pivot": [
+        0.0,
+        0.0
+      ],
+      "water_region": [
+        0.72,
+        0.15,
+        0.26,
+        0.35
+      ]
+    },
+    {
+      "id": "lighthouse_beam",
+      "quadrant": "inferior_izquierda",
+      "file": "inferior_izquierda/lighthouse_beam.png",
+      "type": "rotating_sprite",
+      "frame_size": [
+        256,
+        256
+      ],
+      "frame_count": 1,
+      "fps": 0,
+      "position": [
+        0.82,
+        0.55
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "rotation_period_sec": 5.5
+    },
+    {
+      "id": "lighthouse_glow",
+      "quadrant": "inferior_izquierda",
+      "file": "inferior_izquierda/lighthouse_glow_sheet.png",
+      "type": "animated_sheet",
+      "frame_size": [
+        48,
+        48
+      ],
+      "frame_count": 3,
+      "fps": 4,
+      "position": [
+        0.82,
+        0.55
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "smoke_port_a",
+      "quadrant": "inferior_izquierda",
+      "file": "inferior_izquierda/smoke_port_a_sheet.png",
+      "type": "animated_sheet",
+      "frame_size": [
+        80,
+        120
+      ],
+      "frame_count": 6,
+      "fps": 6,
+      "position": [
+        0.62,
+        0.18
+      ],
+      "pivot": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "id": "smoke_port_b",
+      "quadrant": "inferior_izquierda",
+      "file": "inferior_izquierda/smoke_port_b_sheet.png",
+      "type": "animated_sheet",
+      "frame_size": [
+        80,
+        120
+      ],
+      "frame_count": 6,
+      "fps": 6,
+      "position": [
+        0.72,
+        0.12
+      ],
+      "pivot": [
+        0.5,
+        0.92
+      ]
+    },
+    {
+      "id": "water_mask_inferior_izquierda",
+      "quadrant": "inferior_izquierda",
+      "file": "inferior_izquierda/water_mask.png",
+      "type": "water_mask",
+      "frame_size": [
+        1535,
+        1024
+      ],
+      "frame_count": 1,
+      "fps": 0,
+      "position": [
+        0.0,
+        0.0
+      ],
+      "pivot": [
+        0.0,
+        0.0
+      ],
+      "water_region": [
+        0.45,
+        0.2,
+        0.52,
+        0.78
+      ]
+    },
+    {
+      "id": "fountain_market",
+      "quadrant": "inferior_derecha",
+      "file": "inferior_derecha/fountain_market_sheet.png",
+      "type": "animated_sheet",
+      "frame_size": [
+        192,
+        192
+      ],
+      "frame_count": 4,
+      "fps": 8,
+      "position": [
+        0.72,
+        0.68
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "fountain_plaza_small",
+      "quadrant": "inferior_derecha",
+      "file": "inferior_derecha/fountain_plaza_small_sheet.png",
+      "type": "animated_sheet",
+      "frame_size": [
+        96,
+        96
+      ],
+      "frame_count": 4,
+      "fps": 8,
+      "position": [
+        0.22,
+        0.18
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "window_warm_8",
+      "quadrant": "shared",
+      "file": "shared/window_warm_8.png",
+      "type": "window_tile",
+      "frame_size": [
+        8,
+        8
+      ],
+      "frame_count": 1,
+      "fps": 0,
+      "position": [
+        0.0,
+        0.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "window_warm_12",
+      "quadrant": "shared",
+      "file": "shared/window_warm_12.png",
+      "type": "window_tile",
+      "frame_size": [
+        12,
+        12
+      ],
+      "frame_count": 1,
+      "fps": 0,
+      "position": [
+        0.0,
+        0.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "window_off_8",
+      "quadrant": "shared",
+      "file": "shared/window_off_8.png",
+      "type": "window_tile",
+      "frame_size": [
+        8,
+        8
+      ],
+      "frame_count": 1,
+      "fps": 0,
+      "position": [
+        0.0,
+        0.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ]
+    }
+  ]
+}

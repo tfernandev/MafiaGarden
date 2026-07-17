@@ -24,6 +24,6 @@ shape = SubResource("CapsuleShape3D_enemy")
 [node name="WeaponAttach" type="Node3D" parent="Model"]
 script = ExtResource("3_weapon_attach")
 weapon_scene = ExtResource("4_rifle")
-weapon_position = Vector3(0, 0.02, 0.04)
+weapon_position = Vector3(0, 0, 0)
 weapon_rotation_degrees = Vector3(-90, 0, 0)
 weapon_scale = Vector3(1, 1, 1)

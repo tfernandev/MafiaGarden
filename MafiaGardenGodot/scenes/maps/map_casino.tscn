@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/street_map_v2.gd" id="1_map"]
+[ext_resource type="Script" path="res://scripts/map_environment.gd" id="2_env"]
+
+[node name="StreetMap" type="Node3D"]
+script = ExtResource("1_map")
+spawn_layout = "dense_flank"
+
+[node name="MapEnvironment" type="Node" parent="."]
+script = ExtResource("2_env")
+
+[node name="DesignRoot" type="Node3D" parent="."]
+
+[node name="PlayerSpawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="SpawnMarkers" type="Node3D" parent="."]
+
+[node name="Spawn_NW" type="Marker3D" parent="SpawnMarkers" groups=["enemy_spawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 24)
+
+[node name="Spawn_NE" type="Marker3D" parent="SpawnMarkers" groups=["enemy_spawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 24)
+
+[node name="Spawn_NW2" type="Marker3D" parent="SpawnMarkers" groups=["enemy_spawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 18)
+
+[node name="Spawn_NE2" type="Marker3D" parent="SpawnMarkers" groups=["enemy_spawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 18)
+
+[node name="Spawn_Center" type="Marker3D" parent="SpawnMarkers" groups=["enemy_spawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 26)
+
+[node name="Spawn_L" type="Marker3D" parent="SpawnMarkers" groups=["enemy_spawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 21)
+
+[node name="Spawn_R" type="Marker3D" parent="SpawnMarkers" groups=["enemy_spawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 21)
+
+[node name="Boundaries" type="Node3D" parent="."]

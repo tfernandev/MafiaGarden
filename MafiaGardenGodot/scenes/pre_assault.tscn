@@ -1,0 +1,187 @@
+[gd_scene load_steps=2 format=3 uid="uid://mafia_pre_assault"]
+
+[ext_resource type="Script" path="res://scripts/pre_assault.gd" id="1_pre"]
+
+[node name="PreAssault" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pre")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.04, 0.07, 1)
+
+[node name="Vignette" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.35)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 18
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Eyebrow" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "BRIEFING DE ASALTO"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "BARRIO"
+horizontal_alignment = 1
+
+[node name="Faction" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "FACCIÓN"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "Descripción"
+autowrap_mode = 3
+horizontal_alignment = 1
+
+[node name="Sep1" type="HSeparator" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="InfluenceHeader" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "INFLUENCIA"
+horizontal_alignment = 1
+
+[node name="PlayerRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="PlayerLabel" type="Label" parent="Center/Panel/Margin/VBox/PlayerRow"]
+custom_minimum_size = Vector2(88, 0)
+layout_mode = 2
+text = "Tu banda"
+vertical_alignment = 1
+
+[node name="PlayerBar" type="Control" parent="Center/Panel/Margin/VBox/PlayerRow"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayerPct" type="Label" parent="Center/Panel/Margin/VBox/PlayerRow"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "0%"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="RivalRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RivalLabel" type="Label" parent="Center/Panel/Margin/VBox/RivalRow"]
+custom_minimum_size = Vector2(88, 0)
+layout_mode = 2
+text = "Rival"
+vertical_alignment = 1
+
+[node name="RivalBar" type="Control" parent="Center/Panel/Margin/VBox/RivalRow"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RivalPct" type="Label" parent="Center/Panel/Margin/VBox/RivalRow"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "0%"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Sep2" type="HSeparator" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="SquadHeader" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "ESCUADRÓN"
+horizontal_alignment = 1
+
+[node name="SquadSlots" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "0 / 2 reclutas"
+horizontal_alignment = 1
+
+[node name="SquadList" type="VBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SquadEmpty" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "Sin reclutas. Conquistá barrios o comprá en Mejoras."
+autowrap_mode = 3
+horizontal_alignment = 1
+
+[node name="Sep3" type="HSeparator" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="AssaultHeader" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "ASALTO"
+horizontal_alignment = 1
+
+[node name="WavesLabel" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "Oleadas"
+horizontal_alignment = 1
+
+[node name="RewardRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="CostLabel" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "Coste"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="Center/Panel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="AttackButton" type="Button" parent="Center/Panel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "ASALTAR"
+
+[node name="BackButton" type="Button" parent="Center/Panel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "VOLVER AL MAPA"
