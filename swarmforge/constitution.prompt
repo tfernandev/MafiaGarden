@@ -1,5 +1,8 @@
 # JuegosMobile animation swarm constitution
 
+Read and obey every file in `swarmforge/constitution/articles/` before
+performing work. This local constitution takes precedence when it is stricter.
+
 The work concerns `MafiaGardenGodot` and the reusable Blender → Godot animation
 and equipment-attachment pipeline.
 
