@@ -437,11 +437,14 @@ func _try_shoot() -> void:
 
 
 func _get_muzzle_origin(aim_dir: Vector3) -> Vector3:
-	var attach := get_node_or_null("Model/WeaponAttach")
-	if attach and attach.has_method("get_muzzle_global_position"):
-		var muzzle: Vector3 = attach.get_muzzle_global_position()
+	var model := get_node_or_null("Model/soldado_anim")
+	if model and model.has_method("get_muzzle_global_position"):
+		var muzzle: Vector3 = model.get_muzzle_global_position()
 		if muzzle.distance_squared_to(global_position) > 0.01:
 			return muzzle
+	var muzzle_node := model.find_child("Muzzle", true, false) if model else null
+	if muzzle_node is Node3D:
+		return (muzzle_node as Node3D).global_position
 	return global_position + Vector3(0.0, muzzle_height, 0.0) + aim_dir * 0.55
 
 

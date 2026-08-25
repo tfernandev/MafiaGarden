@@ -27,6 +27,13 @@ CombatInput="*res://scripts/combat_input.gd"
 CombatAudio="*res://scripts/combat_audio.gd"
 GameState="*res://scripts/game_state.gd"
 InputDebug="*res://scripts/input_debug.gd"
+WeaponCalibStore="*res://scripts/weapon_calib_store.gd"
+BeckettRuntime="*res://addons/beckett/runtime/mcp_runtime.gd"
+
+[beckett]
+
+effort_schema=2
+dock_revealed=true
 
 [display]
 
@@ -35,6 +42,10 @@ window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=4
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/prop_attach/plugin.cfg", "res://addons/beckett/plugin.cfg")
 
 [input]
 

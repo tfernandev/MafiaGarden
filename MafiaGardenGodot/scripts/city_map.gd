@@ -2,7 +2,6 @@ extends Control
 
 const PRE_ASSAULT_SCENE := "res://scenes/pre_assault.tscn"
 const MENU_SCENE := "res://scenes/menu.tscn"
-
 @export var use_3d_diorama := false
 ## Una pantalla por cuadrante; flechas para moverse (sin costuras visibles).
 @export var quadrant_mode := true

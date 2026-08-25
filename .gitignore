@@ -18,7 +18,23 @@ Thumbs.db
 .env
 .env.*
 
+# Beckett MCP (token local; no commitear)
+MafiaGardenGodot/.beckett/
+MafiaGardenGodot/.mcp.json
+
+# Graphify (generado localmente)
+**/graphify-out/
+MafiaGardenGodot/calib_report.json
+MafiaGardenGodot/calib_visual_report.json
+MafiaGardenGodot/calib_capture.png
+MafiaGardenGodot/prop_attach_report.json
+MafiaGardenGodot/prop_attach_capture.png
+
 # Blender backups / debug assets
 *.blend1
 **/ambient/debug/
+
+# SwarmForge runtime (worktrees and handoff queues)
+.swarmforge/
+.worktrees/
 mapacompleto.png

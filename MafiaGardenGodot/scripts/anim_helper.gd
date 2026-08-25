@@ -23,11 +23,9 @@ static func resolve_animation_name(player: AnimationPlayer, anim_name: String) -
 	var direct := str(anim_name)
 	if player.has_animation(direct):
 		return direct
-	var with_lib := "default/%s" % direct
-	if player.has_animation(with_lib):
-		return with_lib
+	var leaf := direct.get_file()
 	for existing in player.get_animation_list():
-		if existing.get_file() == direct:
+		if existing.get_file() == leaf:
 			return existing
 	return ""
 
@@ -82,7 +80,6 @@ static func play_walk(player: AnimationPlayer, blend: float = 0.15, speed: float
 		or play_by_keywords(player, WALK_KEYWORDS, blend, speed)
 
 
-## Anula solo X/Z del hueso Hips (root motion horizontal Mixamo); conserva Y para no hundir el mesh.
 static func strip_hips_horizontal_root_motion(player: AnimationPlayer) -> int:
 	if player == null:
 		return 0

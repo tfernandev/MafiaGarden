@@ -3,8 +3,6 @@
 [ext_resource type="Script" uid="uid://bde4jtdc3c1gh" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Script" uid="uid://c2eykemcmu0oi" path="res://scripts/player.gd" id="2_player"]
 [ext_resource type="PackedScene" uid="uid://dtr23q12bmarn" path="res://soldado_anim.tscn" id="5_eb6dy"]
-[ext_resource type="PackedScene" uid="uid://cs75ir2gmfxpb" path="res://models/weapons/ak-47s.glb" id="5_trceg"]
-[ext_resource type="Script" uid="uid://bg68fc721mk51" path="res://scripts/weapon_attach.gd" id="6_weapon_attach"]
 [ext_resource type="Script" uid="uid://c4kkpg2nui674" path="res://scripts/mobile_fire_button.gd" id="9_fire_btn"]
 [ext_resource type="Script" uid="uid://c57ey63soddaf" path="res://scripts/combat_ui.gd" id="10_combat_ui"]
 [ext_resource type="Script" uid="uid://k1uxaqnmpwn8" path="res://scripts/mobile_jump_button.gd" id="12_jump_btn"]
@@ -49,9 +47,6 @@ fov = 62.0
 
 [node name="Model" type="Node3D" parent="Player" unique_id=1746727079]
 
-[node name="WeaponAttach" type="Node3D" parent="Player/Model" unique_id=1326772777]
-script = ExtResource("6_weapon_attach")
-
 [node name="soldado_anim" parent="Player/Model" unique_id=1513358301 instance=ExtResource("5_eb6dy")]
 
 [node name="AimMarker" type="Node3D" parent="Player" unique_id=1864862878]
@@ -65,14 +60,6 @@ surface_material_override/0 = SubResource("StandardMaterial3D_aim")
 [node name="Enemies" type="Node3D" parent="." unique_id=323016781]
 
 [node name="Allies" type="Node3D" parent="." unique_id=1200466625]
-
-[node name="BoneAttachment3D" type="BoneAttachment3D" parent="Allies" unique_id=968985776]
-transform = Transform3D(-0.3992206, 0.91458684, -0.064448774, 0.17798328, 0.008350445, -0.98399824, -0.8994135, -0.40430334, -0.16611493, 0.05692578, 0.11198874, -0.73385066)
-bone_name = "mixamorig_RightHand"
-bone_idx = 34
-
-[node name="Sketchfab_Scene" parent="Allies/BoneAttachment3D" unique_id=1679489444 instance=ExtResource("5_trceg")]
-transform = Transform3D(-0.0020831143, 0.035446346, -0.018417882, -0.006852323, 0.017852424, 0.035133116, 0.03935362, 0.0049847914, 0.005142533, -0.061180055, 0.15866587, 0.02128378)
 
 [node name="WaveManager" type="Node" parent="." unique_id=323016782]
 script = ExtResource("15_waves")

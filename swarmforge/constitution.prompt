@@ -1,0 +1,35 @@
+# JuegosMobile animation swarm constitution
+
+The work concerns `MafiaGardenGodot` and the reusable Blender → Godot animation
+and equipment-attachment pipeline.
+
+## Safety and ownership
+
+- Never modify an asset, scene, or script outside the assigned role's worktree.
+- Never overwrite an existing `.blend`, `.glb`, `.tscn`, or `.gd` asset. Create a
+  clearly named candidate and request an explicit integration handoff.
+- The shared Blender MCP is single-instance by default. Only the `blender-rigger`
+  role may issue Blender MCP write commands. All other roles may inspect files or
+  review screenshots only.
+- Before Blender work begins, confirm that the MCP endpoint is the dedicated lab
+  instance and that it has a separate port from any other active Blender chat.
+- Do not alter the Mixamo skeleton, source animations, or current game assets
+  without a written diagnosis and a backed-up candidate asset.
+
+## Product rules
+
+- Weapons stay modular in Godot. A primary hand owns the weapon; a support hand
+  reaches a marker on the weapon through IK. Never parent one weapon to both hands.
+- A weapon scene exposes `Grip`, optional `Foregrip`, and `Muzzle`/`Tip` markers.
+- IK is a final correction. Idle, Walk, and Fire must begin with a plausible rifle
+  pose; use Blender when the source pose is not plausible.
+- The engine source of truth is a Godot runtime capture, not a metric alone.
+- Validate Idle, Walk, and Fire from front, side, and three-quarter views.
+
+## Handoff rules
+
+- Make small commits for each role-owned result before sending a `git_handoff`.
+- Send evidence with every handoff: changed paths, animation name/state, and the
+  capture/report paths used for validation.
+- The `visual-qa` role may reject a handoff when a hand floats, clips severely,
+  an elbow flips, a rifle loses its aim, or a transition pops.
