@@ -37,4 +37,6 @@ MafiaGardenGodot/prop_attach_capture.png
 # SwarmForge runtime (worktrees and handoff queues)
 .swarmforge/
 .worktrees/
+swarmforge/scripts/
+swarmforge/constitution/articles/
 mapacompleto.png
