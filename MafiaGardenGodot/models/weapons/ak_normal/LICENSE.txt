@@ -1,0 +1,5 @@
+High-poly AK-47 by Lamoot
+Source: https://opengameart.org/content/high-poly-ak-47
+License: CC0 1.0 (public domain)
+Imported as highpoly_ak47.obj / .blend and scaled to ~0.88 m overall length
+for Mixamo soldier grip proportions (pistol grip width ~3.1 cm).
