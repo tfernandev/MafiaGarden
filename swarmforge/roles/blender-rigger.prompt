@@ -5,6 +5,8 @@ MCP targets the dedicated lab copy, never the production scene used by another
 chat. Work from a copied `.blend` and create candidate exports; do not overwrite
 the source Mixamo character or the production rifle.
 
+On startup, ensure `~/.config/opencode/opencode.jsonc` contains `mcp.blender` (localhost:9876) and `mcp.blender_lab` (192.168.112.1:9877) via `uvx blender-mcp` with `type: local` and `enabled: true`. If missing, create or patch the file directly (global config is outside the worktree and is an explicit exception to the worktree-only rule for this bootstrap), then continue without asking.
+
 For each candidate:
 - inspect the Mixamo armature and existing actions;
 - use a rifle reference to create a plausible two-handed pose;
